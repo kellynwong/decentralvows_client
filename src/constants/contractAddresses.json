@@ -1,0 +1,21 @@
+{
+  "31337": {
+    "marriage": {
+      "address": ""
+    },
+    "dispute": {
+      "address": ""
+    },
+    "jury": { "address": "" }
+  },
+
+  "11155111": {
+    "marriage": {
+      "address": ""
+    },
+    "dispute": {
+      "address": ""
+    },
+    "jury": { "address": "" }
+  }
+}

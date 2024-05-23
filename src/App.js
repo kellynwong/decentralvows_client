@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
-import { ethers } from "ethers";
+import { dataLength, ethers } from "ethers";
 import { contractAddresses, marriage_abi, jury_abi } from "./constants/index.js";
 import DataContext from "./Context/DataContext";
 import NavBar from "./components/NavBar";
 import Homepage from "./components/Homepage";
-import Deposit from "./components/Deposit";
+import DepositUser1 from "./components/DepositUser1";
+import DepositUser2 from "./components/DepositUser2";
 import Divorce from "./components/Divorce";
 import Dispute from "./components/Dispute";
 
@@ -14,6 +15,7 @@ function App() {
   const [signer, setSigner] = useState(null);
   const [account, setAccount] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  // Contracts
   const [jury, setJury] = useState(null);
   const [marriage, setMarriage] = useState(null);
 
@@ -75,13 +77,23 @@ function App() {
 
   return (
     <div className="font-pixel text-sm ">
-      <DataContext.Provider value={{ account, setAccount, connectHandler, jury, marriage, provider }}>
+      <DataContext.Provider
+        value={{
+          account,
+          setAccount,
+          connectHandler,
+          jury,
+          marriage,
+          provider,
+        }}
+      >
         <div>
           <NavBar />
           <Routes>
             <Route path="/" element={<Navigate replace to="/homepage" />} />
             <Route path="/homepage" element={<Homepage />} />
-            <Route path="/deposit" element={<Deposit />} />
+            <Route path="/depositUser1" element={<DepositUser1 />} />
+            <Route path="/depositUser2/:urlId/:urlUser2Address" element={<DepositUser2 />} />
             <Route path="/divorce" element={<Divorce />} />
             <Route path="/dispute" element={<Dispute />} />
           </Routes>

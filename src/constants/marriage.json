@@ -37,6 +37,24 @@
         "internalType": "uint256",
         "name": "id",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "user1Address",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "user1DepositedAmount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "user2Address",
+        "type": "address"
       }
     ],
     "name": "User1DepositReceived",
@@ -49,6 +67,42 @@
         "indexed": false,
         "internalType": "uint256",
         "name": "id",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "user1Address",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "user1DepositedAmount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "user2Address",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "user2DepositedAmount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "status",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "marriageStartTime",
         "type": "uint256"
       }
     ],
@@ -162,6 +216,11 @@
       },
       {
         "internalType": "uint256",
+        "name": "marriageStartTime",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
         "name": "disputeStartTime",
         "type": "uint256"
       },
@@ -195,6 +254,101 @@
     "name": "disputeDivorce",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_id",
+        "type": "uint256"
+      }
+    ],
+    "name": "getCoupleDetails",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "id",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "user1address",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "user1depositAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "user2address",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "user2depositAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "status",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "marriageStartTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "disputeStartTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "ipfsHash",
+            "type": "string"
+          },
+          {
+            "internalType": "address",
+            "name": "divorceReporterAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "divorceDisputerAddress",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct Marriage.CoupleDetails",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_userAddress",
+        "type": "address"
+      }
+    ],
+    "name": "getId",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "_id",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {

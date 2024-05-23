@@ -1,7 +1,6 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { NavLink } from "react-router-dom";
 import DataContext from "../Context/DataContext";
-import { RxHamburgerMenu } from "react-icons/rx";
 
 const NavBar = () => {
   const data = useContext(DataContext);
@@ -19,7 +18,7 @@ const NavBar = () => {
           </li>
           <li>
             <NavLink
-              to="/deposit"
+              to="/depositUser1"
               className={({ isActive }) => (isActive ? "underline underline-offset-8 font-bold" : "")}
             >
               DEPOSIT

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
 import { ethers } from "ethers";
-import { contractAddresses, marriage_abi, dispute_abi, jury_abi } from "./constants/index.js";
+import { contractAddresses, marriage_abi, jury_abi } from "./constants/index.js";
 import DataContext from "./Context/DataContext";
 import NavBar from "./components/NavBar";
 import Homepage from "./components/Homepage";
@@ -11,17 +11,34 @@ import Dispute from "./components/Dispute";
 
 function App() {
   const [provider, setProvider] = useState(null);
+  const [signer, setSigner] = useState(null);
   const [account, setAccount] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [jury, setJury] = useState(null);
+  const [marriage, setMarriage] = useState(null);
 
   const loadBlockchainData = async () => {
     // Connect to blockchain
     const provider = new ethers.BrowserProvider(window.ethereum);
     setProvider(provider);
+    const signer = await provider.getSigner();
+    setSigner(signer);
     const network = await provider.getNetwork();
 
+    // Get JS version of jury contract
+    const jury = new ethers.Contract(contractAddresses[network.chainId].jury.address, jury_abi, provider);
+    setJury(jury);
+    console.log("JURY CONTRACT: ", jury.target);
+
+    // Get JS version of marriage contract
+    const marriage = new ethers.Contract(contractAddresses[network.chainId].marriage.address, marriage_abi, provider);
+    setMarriage(marriage);
+    console.log("MARRIAGE CONTRACT: ", marriage.target);
+
+    // Get account 0 and display
     const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
     setAccount(accounts[0]);
+    console.log("CONNECTED ACCOUNT: ", accounts[0]);
   };
 
   // Call loadBlockchainData function on mount
@@ -37,7 +54,7 @@ function App() {
       }
     };
     fetchData();
-  }, []);
+  }, [account]);
 
   // Update ui if user changes metamask account
   window.ethereum.on("accountsChanged", async () => {
@@ -58,7 +75,7 @@ function App() {
 
   return (
     <div className="font-pixel text-sm ">
-      <DataContext.Provider value={{ account, setAccount, connectHandler }}>
+      <DataContext.Provider value={{ account, setAccount, connectHandler, jury, marriage, provider }}>
         <div>
           <NavBar />
           <Routes>

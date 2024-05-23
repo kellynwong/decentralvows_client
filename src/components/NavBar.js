@@ -1,9 +1,10 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import DataContext from "../Context/DataContext";
 
 const NavBar = () => {
   const data = useContext(DataContext);
+
   return (
     <div className="font-montserrat font-bold sticky top-0 z-30 bg-white mt-8 ml-[8rem] mr-[8rem]">
       <nav className="h-full">
@@ -24,6 +25,18 @@ const NavBar = () => {
               DEPOSIT
             </NavLink>
           </li>
+
+          {data.coupleDetails && data.coupleDetails[5] === "pendingDepositFromUser2" && (
+            <li>
+              <NavLink
+                to="/retrieve"
+                className={({ isActive }) => (isActive ? "underline underline-offset-8 font-bold" : "")}
+              >
+                RETRIEVE
+              </NavLink>
+            </li>
+          )}
+
           <li>
             <NavLink
               to="/divorce"

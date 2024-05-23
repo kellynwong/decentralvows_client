@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
-import { dataLength, ethers } from "ethers";
+import { ethers } from "ethers";
 import { contractAddresses, marriage_abi, jury_abi } from "./constants/index.js";
 import DataContext from "./Context/DataContext";
 import NavBar from "./components/NavBar";
@@ -9,17 +9,22 @@ import DepositUser1 from "./components/DepositUser1";
 import DepositUser2 from "./components/DepositUser2";
 import Divorce from "./components/Divorce";
 import Dispute from "./components/Dispute";
+import Retrieve from "./components/Retrieve";
+import Spinner from "./components/Spinner";
 
 function App() {
   const [provider, setProvider] = useState(null);
   const [signer, setSigner] = useState(null);
   const [account, setAccount] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [refreshScreen, setRefreshScreen] = useState(false);
   // Contracts
   const [jury, setJury] = useState(null);
   const [marriage, setMarriage] = useState(null);
+  const [coupleDetails, setCoupleDetails] = useState({});
 
   const loadBlockchainData = async () => {
+    setRefreshScreen(false);
     // Connect to blockchain
     const provider = new ethers.BrowserProvider(window.ethereum);
     setProvider(provider);
@@ -41,6 +46,11 @@ function App() {
     const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
     setAccount(accounts[0]);
     console.log("CONNECTED ACCOUNT: ", accounts[0]);
+
+    // Fetch details of user if they have registered/deposited
+    let id = await marriage?.getId(account);
+    let coupleDetails = await marriage?.getCoupleDetails(id);
+    setCoupleDetails(coupleDetails);
   };
 
   // Call loadBlockchainData function on mount
@@ -56,9 +66,9 @@ function App() {
       }
     };
     fetchData();
-  }, [account]);
+  }, [account, refreshScreen]);
 
-  // Update ui if user changes metamask account
+  // Update UI if user changes metamask account
   window.ethereum.on("accountsChanged", async () => {
     // Refetch accounts
     const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
@@ -85,6 +95,10 @@ function App() {
           jury,
           marriage,
           provider,
+          coupleDetails,
+          setRefreshScreen,
+          isLoading,
+          setIsLoading,
         }}
       >
         <div>
@@ -93,12 +107,14 @@ function App() {
             <Route path="/" element={<Navigate replace to="/homepage" />} />
             <Route path="/homepage" element={<Homepage />} />
             <Route path="/depositUser1" element={<DepositUser1 />} />
-            <Route path="/depositUser2/:urlId/:urlUser2Address" element={<DepositUser2 />} />
+            <Route path="/depositUser2/:urlId/:urlUser2Address" element={<DepositUser2 />} />{" "}
+            <Route path="/retrieve" element={<Retrieve />} />
             <Route path="/divorce" element={<Divorce />} />
             <Route path="/dispute" element={<Dispute />} />
           </Routes>
         </div>
-      </DataContext.Provider>
+      </DataContext.Provider>{" "}
+      {isLoading && <Spinner />}
     </div>
   );
 }

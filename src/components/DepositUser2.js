@@ -7,7 +7,6 @@ const DepositUser2 = () => {
   const { urlId, urlUser2Address } = useParams();
   const data = useContext(DataContext);
   const [isSubmitted, setIsSubmitted] = useState(false);
-
   const [id, setId] = useState(null);
   const [user1Address, setUser1Address] = useState("");
   const [user1DepositAmount, setUser1DepositAmount] = useState(null);
@@ -16,21 +15,23 @@ const DepositUser2 = () => {
   const [status, setStatus] = useState("");
   const [marriageStartTime, setMarriageStartTime] = useState(null);
 
+  // Submit deposit by user2
   const handleSubmit = async (e) => {
+    setIsSubmitted(true);
+    data.setIsLoading(true);
     e.preventDefault();
     try {
       const signer = await data.provider.getSigner();
       let transaction = await data?.marriage.connect(signer).addUser2(urlId, { value: ethers.parseEther("5") });
       const receipt = await transaction.wait();
-      console.log("Transaction Receipt: ", receipt);
-      setIsSubmitted(true);
+      data.setIsLoading(false);
     } catch (error) {
       console.error(error);
       alert("Transaction failed!");
     }
   };
 
-  // Set up event listener for addUser2 and collate data once marriage is confirmed
+  // Set up event listener for addUser2 and collate data
   const handleAddUser2Event = (
     id,
     user1Address,
@@ -47,6 +48,8 @@ const DepositUser2 = () => {
     setUser2DepositAmount(user2DepositAmount);
     setStatus(status);
     setMarriageStartTime(marriageStartTime.toNumber());
+
+    data.setRefreshScreen(true);
   };
 
   useEffect(() => {
@@ -61,10 +64,10 @@ const DepositUser2 = () => {
   }, [data.marriage]);
 
   return (
-    <div className="flex h-screen justify-center items-top mt-[8rem]">
+    <div className="flex h-screen justify-center items-top mt-[4rem]">
       <div>
         {" "}
-        <h1 className={`${isSubmitted ? "text-gray-500" : "text-black"}`}>
+        <h1 className={`${isSubmitted ? "text-gray-500" : "text-red-400 font-extrabold"}`}>
           Step 4 of 4: Please log in with wallet previously registered ({urlUser2Address}) for depositing:{" "}
         </h1>
         <button
@@ -93,7 +96,12 @@ const DepositUser2 = () => {
                 <p>User 2 Deposit Amount: {user2DepositAmount && ethers.formatEther(user2DepositAmount)} ETH</p>
                 <p>Status: {status.toUpperCase()}</p>{" "}
                 {/* Use toNumber() method on the BigNumber to convert it to a JavaScript number */}
-                <p>Marriage Start Time: {new Date(marriageStartTime * 1000).toLocaleString()}</p>
+                <p>
+                  Marriage Start Time:{" "}
+                  {marriageStartTime && marriageStartTime.toNumber() > 0
+                    ? new Date(marriageStartTime.toNumber() * 1000).toLocaleString()
+                    : "Right Now"}
+                </p>
               </div>
               <h1 className="mt-[2rem] text-red-400">
                 You both have successfully commit your marriage to code.{" "}
@@ -102,7 +110,7 @@ const DepositUser2 = () => {
             </h1>
           </>
         )}
-      </div>
+      </div>{" "}
     </div>
   );
 };

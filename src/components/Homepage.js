@@ -4,7 +4,7 @@ const ethers = require("ethers");
 
 const Homepage = () => {
   const data = useContext(DataContext);
-  const shouldShowDisputeDetails =
+  const shouldShowDivorceDetails =
     data.coupleDetails[5] === "pendingDivorce" ||
     data.coupleDetails[5] === "divorced and refunded" ||
     data.coupleDetails[5] === "pendingJuryToResolveDispute" ||
@@ -57,16 +57,16 @@ const Homepage = () => {
               <td> {data.coupleDetails[5] && data.coupleDetails[5].toUpperCase()}</td>
             </tr>
             <tr>
-              <td>Marriage Start Time</td>
+              <td>Vows Committed On</td>
               <td>
                 {" "}
                 {data.coupleDetails[6] && new Date(parseInt(data.coupleDetails[6].toString()) * 1000).toLocaleString()}
               </td>
             </tr>
-            {shouldShowDisputeDetails && (
+            {shouldShowDivorceDetails && (
               <>
                 <tr>
-                  <td>Dispute Start Time</td>
+                  <td>Divorce Reported On</td>
                   <td>
                     {" "}
                     {data.coupleDetails[7] &&

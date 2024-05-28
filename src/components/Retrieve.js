@@ -32,7 +32,7 @@ const Retrieve = () => {
     user2DepositAmount,
     status,
     marriageStartTime,
-    disputeStartTime,
+    divorceReportTime,
     ipfsHash,
     divorceReporterAddress,
     divorceDisputerAddress

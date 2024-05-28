@@ -3,7 +3,7 @@ import DataContext from "../Context/DataContext";
 import axios from "axios";
 const ethers = require("ethers");
 
-const Divorce = () => {
+const ReportDivorce = () => {
   const data = useContext(DataContext);
   const [file, setFile] = useState(null);
   const [ipfsHash, setIpfsHash] = useState(null);
@@ -66,7 +66,7 @@ const Divorce = () => {
     user2DepositAmount,
     status,
     marriageStartTime,
-    disputeStartTime,
+    divorceReportTime,
     ipfsHash,
     divorceReporterAddress,
     divorceDisputerAddress
@@ -80,7 +80,7 @@ const Divorce = () => {
       user2DepositAmount,
       status,
       marriageStartTime,
-      disputeStartTime,
+      divorceReportTime,
       ipfsHash,
       divorceReporterAddress,
       divorceDisputerAddress,
@@ -168,4 +168,4 @@ const Divorce = () => {
   );
 };
 
-export default Divorce;
+export default ReportDivorce;

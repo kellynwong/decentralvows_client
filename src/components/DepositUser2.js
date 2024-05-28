@@ -40,7 +40,7 @@ const DepositUser2 = () => {
     user2DepositAmount,
     status,
     marriageStartTime,
-    disputeStartTime,
+    divorceReportTime,
     ipfsHash,
     divorceReporterAddress,
     divorceDisputerAddress

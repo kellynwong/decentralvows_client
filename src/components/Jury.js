@@ -1,7 +1,7 @@
 import React from "react";
 
-const Dispute = () => {
+const Jury = () => {
   return <div></div>;
 };
 
-export default Dispute;
+export default Jury;

@@ -7,8 +7,9 @@ import NavBar from "./components/NavBar";
 import Homepage from "./components/Homepage";
 import DepositUser1 from "./components/DepositUser1";
 import DepositUser2 from "./components/DepositUser2";
-import Divorce from "./components/Divorce";
-import Dispute from "./components/Dispute";
+import ReportDivorce from "./components/ReportDivorce";
+import AcceptDisputeDivorce from "./components/AcceptDisputeDivorce";
+import Jury from "./components/Jury";
 import Retrieve from "./components/Retrieve";
 import Spinner from "./components/Spinner";
 
@@ -106,8 +107,9 @@ function App() {
             <Route path="/depositUser1" element={<DepositUser1 />} />
             <Route path="/depositUser2/:urlId/:urlUser2Address" element={<DepositUser2 />} />{" "}
             <Route path="/retrieve" element={<Retrieve />} />
-            <Route path="/divorce" element={<Divorce />} />
-            <Route path="/dispute" element={<Dispute />} />
+            <Route path="/reportDivorce" element={<ReportDivorce />} />
+            <Route path="/acceptDisputeDivorce" element={<AcceptDisputeDivorce />} />{" "}
+            <Route path="/jury" element={<Jury />} />
           </Routes>
         </div>
       </DataContext.Provider>{" "}

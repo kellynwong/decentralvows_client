@@ -24,7 +24,7 @@ function App() {
   const [coupleDetails, setCoupleDetails] = useState({});
 
   const loadBlockchainData = async () => {
-    setRefreshScreen(false);
+    console.log("Refresh Screen: ", refreshScreen);
     // Connect to blockchain
     const provider = new ethers.BrowserProvider(window.ethereum);
     setProvider(provider);
@@ -51,18 +51,17 @@ function App() {
     let id = await marriage?.getId(account);
     let coupleDetails = await marriage?.getCoupleDetails(id);
     setCoupleDetails(coupleDetails);
+    setRefreshScreen(false);
   };
 
   // Call loadBlockchainData function on mount
   useEffect(() => {
     const fetchData = async () => {
-      setIsLoading(true);
       try {
         await loadBlockchainData();
       } catch (error) {
         console.error("An error has occurred: ", error);
       } finally {
-        setIsLoading(false);
       }
     };
     fetchData();
@@ -73,7 +72,6 @@ function App() {
     // Refetch accounts
     const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
     setAccount(accounts[0]);
-    console.log(account);
   });
 
   // For unconnected metamask users
@@ -82,7 +80,6 @@ function App() {
       method: "eth_requestAccounts",
     });
     setAccount(accounts[0]);
-    console.log(account);
   };
 
   return (

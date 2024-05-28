@@ -14,44 +14,6 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
-        "internalType": "address",
-        "name": "userAddressRefunded",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "status",
-        "type": "string"
-      }
-    ],
-    "name": "DepositRetrieved",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "divorceReporterAddress",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "status",
-        "type": "string"
-      }
-    ],
-    "name": "DivorceSubmitted",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
         "indexed": true,
         "internalType": "address",
         "name": "previousOwner",
@@ -72,30 +34,30 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "uint256",
-        "name": "id",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "user1Address",
-        "type": "address"
+        "internalType": "string",
+        "name": "status",
+        "type": "string"
       },
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "user1DepositedAmount",
+        "name": "disputeStartTime",
         "type": "uint256"
       },
       {
         "indexed": false,
+        "internalType": "string",
+        "name": "ipfsHash",
+        "type": "string"
+      },
+      {
+        "indexed": false,
         "internalType": "address",
-        "name": "user2Address",
+        "name": "divorceReporterAddress",
         "type": "address"
       }
     ],
-    "name": "User1DepositReceived",
+    "name": "SubmitDivorce",
     "type": "event"
   },
   {
@@ -116,7 +78,7 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "user1DepositedAmount",
+        "name": "user1DepositAmount",
         "type": "uint256"
       },
       {
@@ -128,7 +90,7 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "user2DepositedAmount",
+        "name": "user2DepositAmount",
         "type": "uint256"
       },
       {
@@ -142,9 +104,33 @@
         "internalType": "uint256",
         "name": "marriageStartTime",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "disputeStartTime",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "ipfsHash",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "divorceReporterAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "divorceDisputerAddress",
+        "type": "address"
       }
     ],
-    "name": "User2DepositReceived",
+    "name": "UpdateCoupleDetails",
     "type": "event"
   },
   {

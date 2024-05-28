@@ -4,6 +4,12 @@ const ethers = require("ethers");
 
 const Homepage = () => {
   const data = useContext(DataContext);
+  const shouldShowDisputeDetails =
+    data.coupleDetails[5] === "pendingDivorce" ||
+    data.coupleDetails[5] === "divorced and refunded" ||
+    data.coupleDetails[5] === "pendingJuryToResolveDispute" ||
+    data.coupleDetails[5] === "juryVotesForDivorce, penalized disputer and refunded reporter" ||
+    data.coupleDetails[5] === "juryVotesAgainstDivorce, penalized reporter and refunded disputer";
 
   return (
     <div>
@@ -57,6 +63,30 @@ const Homepage = () => {
                 {data.coupleDetails[6] && new Date(parseInt(data.coupleDetails[6].toString()) * 1000).toLocaleString()}
               </td>
             </tr>
+            {shouldShowDisputeDetails && (
+              <>
+                <tr>
+                  <td>Dispute Start Time</td>
+                  <td>
+                    {" "}
+                    {data.coupleDetails[7] &&
+                      new Date(parseInt(data.coupleDetails[7].toString()) * 1000).toLocaleString()}
+                  </td>
+                </tr>
+                <tr>
+                  <td>IPFS Hash</td>
+                  <td> {data.coupleDetails[8]}</td>
+                </tr>
+                <tr>
+                  <td>Divorce Reporter Address</td>
+                  <td> {data.coupleDetails[9]}</td>
+                </tr>
+                <tr>
+                  <td>Divorce Disputer Address</td>
+                  <td> {data.coupleDetails[10]}</td>
+                </tr>
+              </>
+            )}
           </table>
         </div>
       ) : (

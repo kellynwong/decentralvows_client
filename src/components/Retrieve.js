@@ -23,9 +23,22 @@ const Retrieve = () => {
     }
   };
 
-  // Set up event listener for retrieveDeposit and collate data
-  const handleDepositRetrieved = async (userAddressRefunded, status) => {
-    setUserAddressRefunded(userAddressRefunded);
+  // Set up event listener and collate data
+  const handleEvent = (
+    id,
+    user1Address,
+    user1DepositAmount,
+    user2Address,
+    user2DepositAmount,
+    status,
+    marriageStartTime,
+    disputeStartTime,
+    ipfsHash,
+    divorceReporterAddress,
+    divorceDisputerAddress
+  ) => {
+    console.log("handleEvent is called for Retrieve");
+    setUserAddressRefunded(user1Address);
     setStatus(status);
     data.setIsLoading(false);
     data.setRefreshScreen(true);
@@ -33,10 +46,9 @@ const Retrieve = () => {
 
   useEffect(() => {
     if (data.marriage) {
-      data.marriage && data.marriage.on("DepositRetrieved", handleDepositRetrieved);
-      // Clean up event listener on unmount or when data.marriage changes
+      data.marriage.on("UpdateCoupleDetails", handleEvent);
       return () => {
-        data.marriage.off("DepositRetrieved", handleDepositRetrieved);
+        data.marriage.off("UpdateCoupleDetails", handleEvent);
       };
     }
   }, [data.marriage]);

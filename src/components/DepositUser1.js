@@ -32,11 +32,37 @@ const DepositUser1 = () => {
     }
   };
 
-  // Set up event listener for addUser1 and collate data
-  const handleAddUser1Event = (idForUrl, user1Address, user1DepositAmount, user2Address) => {
+  const handleEvent = (
+    id,
+    user1Address,
+    user1DepositAmount,
+    user2Address,
+    user2DepositAmount,
+    status,
+    marriageStartTime,
+    disputeStartTime,
+    ipfsHash,
+    divorceReporterAddress,
+    divorceDisputerAddress
+  ) => {
+    console.log("handleEvent is called for DepositUser1");
+    console.log({
+      id,
+      user1Address,
+      user1DepositAmount,
+      user2Address,
+      user2DepositAmount,
+      status,
+      marriageStartTime,
+      disputeStartTime,
+      ipfsHash,
+      divorceReporterAddress,
+      divorceDisputerAddress,
+    });
     setUser1Address(user1Address);
     setUser1DepositAmount(user1DepositAmount);
-    const urlForUser2 = `${window.location.origin}/depositUser2/${idForUrl}/${user2Address}`;
+    const urlForUser2 = `${window.location.origin}/depositUser2/${id}/${user2Address}`;
+
     setUrlForUser2(urlForUser2);
     data.setIsLoading(false);
     data.setRefreshScreen(true);
@@ -44,10 +70,9 @@ const DepositUser1 = () => {
 
   useEffect(() => {
     if (data.marriage) {
-      data.marriage && data.marriage.on("User1DepositReceived", handleAddUser1Event);
-      // Clean up event listener on unmount or when data.marriage changes
+      data.marriage.on("UpdateCoupleDetails", handleEvent);
       return () => {
-        data.marriage.off("User1DepositReceived", handleAddUser1Event);
+        data.marriage.off("UpdateCoupleDetails", handleEvent);
       };
     }
   }, [data.marriage]);

@@ -31,34 +31,42 @@ const DepositUser2 = () => {
     }
   };
 
-  // Set up event listener for addUser2 and collate data
-  const handleAddUser2Event = (
+  // Set up event listener and collate data
+  const handleEvent = (
     id,
     user1Address,
     user1DepositAmount,
     user2Address,
     user2DepositAmount,
     status,
-    marriageStartTime
+    marriageStartTime,
+    disputeStartTime,
+    ipfsHash,
+    divorceReporterAddress,
+    divorceDisputerAddress
   ) => {
+    console.log("handleEvent is called for DepositUser2");
     setId(id);
+    console.log("id is set");
     setUser1Address(user1Address);
+    console.log("user1Address is set");
     setUser1DepositAmount(user1DepositAmount);
+    console.log("user1DepositAmount is set");
     setUser2Address(user2Address);
+    console.log("user2Address is set");
     setUser2DepositAmount(user2DepositAmount);
+    console.log("user2DepositAmount is set");
     setStatus(status);
-    setMarriageStartTime(marriageStartTime.toNumber());
-
+    console.log("status is set");
     data.setRefreshScreen(true);
+    console.log("refreshScreen is set");
   };
 
   useEffect(() => {
     if (data.marriage) {
-      console.log("Setting up event listener for User2DepositReceived...");
-      data.marriage && data.marriage.on("User2DepositReceived", handleAddUser2Event);
-      // Clean up event listener on unmount or when marriage changes
+      data.marriage.on("UpdateCoupleDetails", handleEvent);
       return () => {
-        data.marriage.off("User2DepositReceived", handleAddUser2Event);
+        data.marriage.off("UpdateCoupleDetails", handleEvent);
       };
     }
   }, [data.marriage]);
@@ -86,27 +94,25 @@ const DepositUser2 = () => {
               Congrats! Deposit from User 2 {user2Address} amounting to{" "}
               {ethers.formatUnits(user2DepositAmount, 18).toString()} eth is successful.
             </h1>
+            <h1 className="mt-[2rem] font-extrabold text-red-400">Here are the details of your contract:</h1>
+            <div className="flex-col font-normal">
+              <p>Couple ID: {id.toString()}</p>
+              <p>User 1 Address: {user1Address}</p>
+              <p>User 1 Deposit Amount: {user1DepositAmount && ethers.formatEther(user1DepositAmount)} ETH</p>
+              <p>User 2 Address: {user2Address}</p>
+              <p>User 2 Deposit Amount: {user2DepositAmount && ethers.formatEther(user2DepositAmount)} ETH</p>
+              <p>Status: {status.toUpperCase()}</p>{" "}
+              {/* Use toNumber() method on the BigNumber to convert it to a JavaScript number */}
+              <p>
+                Marriage Start Time:{" "}
+                {marriageStartTime && marriageStartTime.toNumber() > 0
+                  ? new Date(marriageStartTime.toNumber() * 1000).toLocaleString()
+                  : "Right Now"}
+              </p>
+            </div>
             <h1 className="mt-[2rem] font-extrabold text-red-400">
-              Here are the details of your contract:
-              <div className="flex-col font-normal">
-                <p>Couple ID: {id.toString()}</p>
-                <p>User 1 Address: {user1Address}</p>
-                <p>User 1 Deposit Amount: {user1DepositAmount && ethers.formatEther(user1DepositAmount)} ETH</p>
-                <p>User 2 Address: {user2Address}</p>
-                <p>User 2 Deposit Amount: {user2DepositAmount && ethers.formatEther(user2DepositAmount)} ETH</p>
-                <p>Status: {status.toUpperCase()}</p>{" "}
-                {/* Use toNumber() method on the BigNumber to convert it to a JavaScript number */}
-                <p>
-                  Marriage Start Time:{" "}
-                  {marriageStartTime && marriageStartTime.toNumber() > 0
-                    ? new Date(marriageStartTime.toNumber() * 1000).toLocaleString()
-                    : "Right Now"}
-                </p>
-              </div>
-              <h1 className="mt-[2rem] text-red-400">
-                You both have successfully commit your marriage to code.{" "}
-                <h1>Here's to forever and ever and may you have an everlasting marriage!</h1>
-              </h1>
+              You both have successfully commit your marriage to code.{" "}
+              <p>Here's to forever and ever and may you have an everlasting marriage!</p>
             </h1>
           </>
         )}

@@ -24,7 +24,13 @@ const Homepage = () => {
             </tr>
             <tr>
               <td>User 1 Deposited Amount</td>
-              <td> {data.coupleDetails[2] && ethers.formatEther(data.coupleDetails[2])} ETH</td>
+              <td>
+                {" "}
+                {data.coupleDetails[2] && ethers.formatEther(data.coupleDetails[2])
+                  ? ethers.formatEther(data.coupleDetails[2])
+                  : 0}{" "}
+                ETH
+              </td>
             </tr>
             <tr>
               <td>User 2 Address</td>
@@ -32,7 +38,13 @@ const Homepage = () => {
             </tr>
             <tr>
               <td>User 2 Deposited Amount</td>
-              <td> {data.coupleDetails[4] && ethers.formatEther(data.coupleDetails[4])} ETH</td>
+              <td>
+                {" "}
+                {data.coupleDetails[4] && ethers.formatEther(data.coupleDetails[4])
+                  ? ethers.formatEther(data.coupleDetails[4])
+                  : 0}{" "}
+                ETH
+              </td>
             </tr>
             <tr>
               <td>Status</td>

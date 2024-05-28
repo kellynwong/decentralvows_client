@@ -17,7 +17,6 @@ const Retrieve = () => {
       let transaction = await data?.marriage.connect(signer).retrieveDeposit();
       const receipt = await transaction.wait();
       console.log("Transaction Receipt: ", receipt);
-      setIsSubmitted(true);
     } catch (error) {
       console.error(error);
       alert("Transaction failed!");

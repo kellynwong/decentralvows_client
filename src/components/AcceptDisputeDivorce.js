@@ -52,7 +52,8 @@ const AcceptDisputeDivorce = () => {
       </button>
       <h1 className={`mt-[2rem] ${isSubmitted ? "text-gray-500" : "text-black font-extrabold"}`}>
         Should you dispute, a jury will be convened for review and resolution. If your dispute is successful, you will
-        get a refund of 1 ETH and reporter of divorce will get 0 ETH:
+        get a refund of 1 ETH and reporter of divorce will get 0 ETH; if dispute is unsuccessful, reporter of divorce
+        gets a reund of 2 ETH and you will get nothing.
       </h1>
       <button
         className={`mt-4 rounded p-1 m-2 py-1 px-3 transition-colors border ${
@@ -75,7 +76,7 @@ const AcceptDisputeDivorce = () => {
         <>
           <h1 className="mt-[2rem] font-extrabold">
             Your response has been successfully submitted. Dispute has been escalated to the jury. Please wait a period
-            or less of 1 week for resolution. You may check the status on the Homepage.
+            or less of 1 week for resolution. You may check the status on the Dashboard.
           </h1>
         </>
       )}

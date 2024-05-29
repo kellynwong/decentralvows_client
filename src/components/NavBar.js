@@ -32,15 +32,29 @@ const NavBar = () => {
               HOMEPAGE
             </NavLink>
           </li>
-          <li>
-            <NavLink
-              to="/depositUser1"
-              className={({ isActive }) => (isActive ? "underline underline-offset-8 font-bold" : "")}
-            >
-              DEPOSIT
-            </NavLink>
-          </li>
-
+          {data.coupleDetails[5] != "" && (
+            <li>
+              <NavLink
+                to="/dashboard"
+                className={({ isActive }) => (isActive ? "underline underline-offset-8 font-bold" : "")}
+              >
+                DASHBOARD
+              </NavLink>
+            </li>
+          )}
+          {/* Solidity does not have a null concept, uninitialized fields will have default values: 0 for integers, false
+          for booleans, and empty strings for strings. */}
+          {data.coupleDetails[5] === "pendingDepositFromUser2" ||
+            (data.coupleDetails[5] === "" && (
+              <li>
+                <NavLink
+                  to="/depositUser1"
+                  className={({ isActive }) => (isActive ? "underline underline-offset-8 font-bold" : "")}
+                >
+                  DEPOSIT
+                </NavLink>
+              </li>
+            ))}
           {data.coupleDetails && data.coupleDetails[5] === "pendingDepositFromUser2" && (
             <li>
               <NavLink
@@ -51,7 +65,6 @@ const NavBar = () => {
               </NavLink>
             </li>
           )}
-
           {data.coupleDetails && data.coupleDetails[5] === "married" && (
             <li>
               <NavLink
@@ -62,7 +75,6 @@ const NavBar = () => {
               </NavLink>
             </li>
           )}
-
           {data.coupleDetails &&
             data.coupleDetails[5] === "pendingDivorce" &&
             data.account.toLowerCase() != data.coupleDetails[9].toLowerCase() && (

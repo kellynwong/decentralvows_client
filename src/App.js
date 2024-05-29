@@ -5,6 +5,7 @@ import { contractAddresses, marriage_abi, jury_abi } from "./constants/index.js"
 import DataContext from "./Context/DataContext";
 import NavBar from "./components/NavBar";
 import Homepage from "./components/Homepage";
+import Dashboard from "./components/Dashboard";
 import DepositUser1 from "./components/DepositUser1";
 import DepositUser2 from "./components/DepositUser2";
 import ReportDivorce from "./components/ReportDivorce";
@@ -24,7 +25,8 @@ function App() {
   const [marriage, setMarriage] = useState(null);
   const [coupleDetails, setCoupleDetails] = useState({});
   const [disputeDetails, setDisputeDetails] = useState({});
-  const [disputeResults, setDisputeResults] = useState({});
+  const [juryResults, setJuryResults] = useState(null);
+  const [juryResultsError, setJuryResultsError] = useState(null);
 
   const loadBlockchainData = async () => {
     console.log("Refresh Screen: ", refreshScreen);
@@ -38,17 +40,14 @@ function App() {
     // Get JS version of jury contract
     const jury = new ethers.Contract(contractAddresses[network.chainId].jury.address, jury_abi, provider);
     setJury(jury);
-    console.log("JURY CONTRACT: ", jury.target);
 
     // Get JS version of marriage contract
     const marriage = new ethers.Contract(contractAddresses[network.chainId].marriage.address, marriage_abi, provider);
     setMarriage(marriage);
-    console.log("MARRIAGE CONTRACT: ", marriage.target);
 
     // Get account 0 and display
     const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
     setAccount(accounts[0]);
-    console.log("CONNECTED ACCOUNT: ", accounts[0]);
 
     // Fetch details of user if they have registered/deposited
     let id = await marriage?.getId(account);
@@ -56,10 +55,19 @@ function App() {
     setCoupleDetails(coupleDetails);
     setRefreshScreen(false);
 
-    // Fetch details of disputes
+    // Fetch details of disputed divorces
     let disputeDetails = await jury?.coupleIdToDetails(id);
     setDisputeDetails(disputeDetails);
-    console.log(disputeDetails);
+
+    // Fetch results of jury, if quorum reached
+    try {
+      let juryResults = await jury.getResults(id);
+      setJuryResults(juryResults);
+      setJuryResultsError(null);
+    } catch (error) {
+      console.error("Error fetching jury results:", error);
+      setJuryResultsError("Voting is still ongoing or another error occurred.");
+    }
   };
 
   // Call loadBlockchainData function on mount
@@ -106,8 +114,10 @@ function App() {
           setIsLoading,
           disputeDetails,
           setDisputeDetails,
-          disputeResults,
-          setDisputeResults,
+          juryResults,
+          setJuryResults,
+          juryResultsError,
+          setJuryResultsError,
         }}
       >
         <div>
@@ -115,6 +125,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Navigate replace to="/homepage" />} />
             <Route path="/homepage" element={<Homepage />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/depositUser1" element={<DepositUser1 />} />
             <Route path="/depositUser2/:urlId/:urlUser2Address" element={<DepositUser2 />} />{" "}
             <Route path="/retrieve" element={<Retrieve />} />

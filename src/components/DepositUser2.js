@@ -72,7 +72,7 @@ const DepositUser2 = () => {
   }, [data.marriage]);
 
   return (
-    <div className="flex h-screen justify-center items-top mt-[4rem] ml-[8rem] ">
+    <div className="flex h-screen justify-center items-top mt-[4rem] ml-[4rem] ">
       <div>
         {" "}
         <h1 className={`${isSubmitted ? "text-gray-500" : "text-red-400 font-extrabold"}`}>

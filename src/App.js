@@ -23,7 +23,8 @@ function App() {
   const [jury, setJury] = useState(null);
   const [marriage, setMarriage] = useState(null);
   const [coupleDetails, setCoupleDetails] = useState({});
-  const [disputeResults, setDisputeResults] = useState(null);
+  const [disputeDetails, setDisputeDetails] = useState({});
+  const [disputeResults, setDisputeResults] = useState({});
 
   const loadBlockchainData = async () => {
     console.log("Refresh Screen: ", refreshScreen);
@@ -50,12 +51,15 @@ function App() {
     console.log("CONNECTED ACCOUNT: ", accounts[0]);
 
     // Fetch details of user if they have registered/deposited
-    console.log("Account:", account);
     let id = await marriage?.getId(account);
-    console.log("ID:", id);
     let coupleDetails = await marriage?.getCoupleDetails(id);
     setCoupleDetails(coupleDetails);
     setRefreshScreen(false);
+
+    // Fetch details of disputes
+    let disputeDetails = await jury?.coupleIdToDetails(id);
+    setDisputeDetails(disputeDetails);
+    console.log(disputeDetails);
   };
 
   // Call loadBlockchainData function on mount
@@ -100,6 +104,8 @@ function App() {
           setRefreshScreen,
           isLoading,
           setIsLoading,
+          disputeDetails,
+          setDisputeDetails,
           disputeResults,
           setDisputeResults,
         }}

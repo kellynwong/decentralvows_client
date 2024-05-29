@@ -6,15 +6,13 @@ const Jury = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [disputes, setDisputes] = useState([]);
 
-  // Retrieve all disputed divorces from blockchain and list them on jury component
+  // Retrieve and display disputes
   let allDisputes = [];
   const fetchAllDisputes = async () => {
     let count = await data.jury.disputeDivorceCount();
     count = parseInt(count.toString());
     for (let x = 1; x <= count; x++) {
-      // use (x) and not [x]
-      let dispute = await data.jury.disputeCountToDetails(x);
-      console.log(dispute[2]);
+      let dispute = await data.jury.disputeCountToDetails(x); // use (x) and not [x]
       allDisputes.push(dispute);
     }
     setDisputes(allDisputes);
@@ -47,7 +45,7 @@ const Jury = () => {
     try {
       const signer = await data.provider.getSigner();
       let transaction = await data?.jury.connect(signer).recordVotesByJury(coupleId, vote);
-      const receipt = await transaction.wait();
+      await transaction.wait();
       data.setIsLoading(false);
     } catch (error) {
       console.error(error);

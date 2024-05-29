@@ -85,6 +85,16 @@ const Homepage = () => {
                   <td>Divorce Disputer Address</td>
                   <td> {data.coupleDetails[10]}</td>
                 </tr>
+                {data.disputeResults && data.disputeResults[data.coupleDetails[0].toString()] && (
+                  <tr>
+                    <td>Dispute Results</td>
+                    <td>
+                      {data?.disputeResults[data.coupleDetails[0].toString()]?.toString() === 0
+                        ? "Jury Has Voted For Divorce"
+                        : "Jury Has Voted Against Divorce"}
+                    </td>
+                  </tr>
+                )}
               </>
             )}
           </table>

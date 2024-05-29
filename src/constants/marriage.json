@@ -41,7 +41,7 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "disputeStartTime",
+        "name": "divorceReportTime",
         "type": "uint256"
       },
       {
@@ -108,7 +108,7 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "disputeStartTime",
+        "name": "divorceReportTime",
         "type": "uint256"
       },
       {
@@ -239,7 +239,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "disputeStartTime",
+        "name": "divorceReportTime",
         "type": "uint256"
       },
       {
@@ -317,7 +317,7 @@
           },
           {
             "internalType": "uint256",
-            "name": "disputeStartTime",
+            "name": "divorceReportTime",
             "type": "uint256"
           },
           {

@@ -8,33 +8,21 @@ const AcceptDisputeDivorce = () => {
   const [accepted, setAccepted] = useState(false);
   const [disputed, setDisputed] = useState(false);
 
-  // Accept divorce
-  const handleAcceptDivorce = async (e) => {
+  const handleDivorceResponse = async (responseType, e) => {
     setIsSubmitted(true);
     data.setIsLoading(true);
     e.preventDefault();
     try {
       const signer = await data.provider.getSigner();
-      let transaction = await data?.marriage.connect(signer).acceptDivorce();
+      let transaction;
+      if (responseType === "accept") {
+        transaction = await data?.marriage.connect(signer).acceptDivorce();
+        setAccepted(true);
+      } else if (responseType === "dispute") {
+        transaction = await data?.marriage.connect(signer).disputeDivorce();
+        setDisputed(true);
+      }
       const receipt = await transaction.wait();
-      setAccepted(true);
-      data.setIsLoading(false);
-    } catch (error) {
-      console.error(error);
-      alert("Transaction failed!");
-    }
-  };
-  // Dispute divorce
-  const handleDisputeDivorce = async (e) => {
-    setIsSubmitted(true);
-    data.setIsLoading(true);
-    e.preventDefault();
-    try {
-      const signer = await data.provider.getSigner();
-      let transaction = await data?.marriage.connect(signer).disputeDivorce();
-      const receipt = await transaction.wait();
-      console.log("Transaction Receipt: ", receipt);
-      setDisputed(true);
       data.setIsLoading(false);
     } catch (error) {
       console.error(error);
@@ -46,7 +34,7 @@ const AcceptDisputeDivorce = () => {
     <div className="ml-[8rem] mt-[4rem] w-[45rem]">
       <h1 className={`mt-[2rem] ${isSubmitted ? "text-gray-500" : "text-red-400 font-extrabold"}`}>
         A divorce has been reported. Please respond within 7 days from when divorce was first reported on
-        {" " + new Date(parseInt(data.coupleDetails[6].toString()) * 1000).toLocaleString()}
+        {" " + new Date(parseInt(data?.coupleDetails[6].toString()) * 1000).toLocaleString()}
         {data.coupleDetails[7]}, else, divorce case will be escalated to a jury for resolution.
       </h1>
       <h1 className={`mt-[2rem] ${isSubmitted ? "text-gray-500" : "text-black font-extrabold"}`}>
@@ -58,7 +46,7 @@ const AcceptDisputeDivorce = () => {
             ? "text-gray-500 bg-gray-100 cursor-not-allowed"
             : "text-red-400 hover:bg-red-100 hover:text-black"
         }`}
-        onClick={handleAcceptDivorce}
+        onClick={(e) => handleDivorceResponse("accept", e)}
       >
         Accept Divorce
       </button>
@@ -72,7 +60,7 @@ const AcceptDisputeDivorce = () => {
             ? "text-gray-500 bg-gray-100 cursor-not-allowed"
             : "text-red-400 hover:bg-red-100 hover:text-black"
         }`}
-        onClick={handleDisputeDivorce}
+        onClick={(e) => handleDivorceResponse("dispute", e)}
       >
         Dispute Divorce
       </button>

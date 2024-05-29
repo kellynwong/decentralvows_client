@@ -4,6 +4,21 @@ import DataContext from "../Context/DataContext";
 
 const NavBar = () => {
   const data = useContext(DataContext);
+  const [isJuryMember, setIsJuryMember] = useState(false);
+
+  const checkJury = async () => {
+    if (data.jury && data.account) {
+      let formattedAccount = data.account.toLowerCase();
+      if ((await data.jury.whitelist(formattedAccount)) === true) {
+        setIsJuryMember(true);
+      }
+    }
+  };
+
+  useEffect(() => {
+    setIsJuryMember(false);
+    checkJury();
+  }, [data.account]);
 
   return (
     <div className="font-montserrat font-bold sticky top-0 z-30 bg-white mt-8 ml-[8rem] mr-[8rem]">
@@ -60,10 +75,10 @@ const NavBar = () => {
                 </NavLink>
               </li>
             )}
-          {data.coupleDetails && data.coupleDetails[5] === "pendingJuryToResolveDispute" && (
+          {isJuryMember && (
             <li>
               <NavLink
-                to="/dispute"
+                to="/jury"
                 className={({ isActive }) => (isActive ? "underline underline-offset-8 font-bold" : "")}
               >
                 JURY

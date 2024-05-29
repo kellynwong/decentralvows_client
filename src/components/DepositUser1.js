@@ -46,23 +46,9 @@ const DepositUser1 = () => {
     divorceDisputerAddress
   ) => {
     console.log("handleEvent is called for DepositUser1");
-    console.log({
-      id,
-      user1Address,
-      user1DepositAmount,
-      user2Address,
-      user2DepositAmount,
-      status,
-      marriageStartTime,
-      divorceReportTime,
-      ipfsHash,
-      divorceReporterAddress,
-      divorceDisputerAddress,
-    });
     setUser1Address(user1Address);
     setUser1DepositAmount(user1DepositAmount);
     const urlForUser2 = `${window.location.origin}/depositUser2/${id}/${user2Address}`;
-
     setUrlForUser2(urlForUser2);
     data.setIsLoading(false);
     data.setRefreshScreen(true);
@@ -70,8 +56,10 @@ const DepositUser1 = () => {
 
   useEffect(() => {
     if (data.marriage) {
+      console.log("Setting up event listener for addUser1...");
       data.marriage.on("UpdateCoupleDetails", handleEvent);
       return () => {
+        console.log("Removing event listener for addUser1...");
         data.marriage.off("UpdateCoupleDetails", handleEvent);
       };
     }

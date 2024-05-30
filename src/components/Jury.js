@@ -50,7 +50,7 @@ const Jury = () => {
       )}
       <p className="ml-10 mb-4 p-6"></p>
       <div className="ml-20 mt-[-1rem] grid grid-cols-3 gap-y-12">
-        {disputesArray.map((dispute, index) => (
+        {disputes.map((dispute, index) => (
           <div key={index}>
             {" "}
             {dispute[5].toString() === false ? (

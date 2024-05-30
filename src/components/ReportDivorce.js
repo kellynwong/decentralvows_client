@@ -2,7 +2,6 @@ import React, { useContext, useState, useEffect } from "react";
 import DataContext from "../Context/DataContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-const ethers = require("ethers");
 
 const ReportDivorce = () => {
   const data = useContext(DataContext);
@@ -47,14 +46,10 @@ const ReportDivorce = () => {
 
       // Call function at smart contract
       const signer = await data.provider.getSigner();
-      // let transaction = await data?.marriage.connect(signer).addUser1("0x140e3c94ad3e8b4dd9419c05d8368a8e5ef27786", { value: ethers.parseEther("5") });
-      // data.marriage.on("UpdateCoupleDetails", handleEvent);
-
       let transaction = await data?.marriage.connect(signer).submitDivorce(ipfsHash);
-      const receipt = await transaction.wait();
+      await transaction.wait();
       console.log("SUBMISSION OF DIVORCE TO BLOCKCHAIN SUCCESSFUL");
       data.setRefreshScreen(true);
-
       setTimeout(() => {
         navigate("/dashboard");
       }, 8000);
@@ -114,19 +109,6 @@ const ReportDivorce = () => {
       };
     }
   }, [data.marriage]);
-
-  // useEffect(() => {
-  //   if (data.marriage) {
-  //     console.log("Setting up event listener for divorce...");
-  //     const filter = data.marriage.filters.UpdateCoupleDetails();
-  //     data.marriage.on(filter, handleEvent);
-
-  //     return () => {
-  //       console.log("Removing event listener for divorce...");
-  //       data.marriage.off(filter, handleEvent);
-  //     };
-  //   }
-  // }, [data.marriage]);
 
   return (
     <div className="flex-col ml-[8rem] mt-[4rem] ">

@@ -27,7 +27,6 @@ const DepositUser1 = () => {
       console.log("Transaction Receipt: ", receipt);
       setDepositSuccessful(true);
       data.setIsLoading(false);
-      // data.setRefreshScreen(true);
     } catch (error) {
       console.error(error);
       alert("Transaction failed!");

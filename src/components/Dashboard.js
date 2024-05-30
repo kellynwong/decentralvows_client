@@ -1,6 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
 import DataContext from "../Context/DataContext";
-import HowItWorks from "./Homepage";
 const ethers = require("ethers");
 
 const Dashboard = () => {
@@ -20,7 +19,7 @@ const Dashboard = () => {
     try {
       const signer = await data.provider.getSigner();
       let transaction = await data?.marriage.connect(signer).concludeDispute(coupleId);
-      const receipt = await transaction.wait();
+      await transaction.wait();
       data.setIsLoading(false);
       setClaimSuccessful(true);
     } catch (error) {

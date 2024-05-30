@@ -1,7 +1,6 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState } from "react";
 import DataContext from "../Context/DataContext";
 import { useNavigate } from "react-router-dom";
-const ethers = require("ethers");
 
 const AcceptDisputeDivorce = () => {
   const data = useContext(DataContext);

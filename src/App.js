@@ -18,7 +18,6 @@ import { useNavigate } from "react-router-dom";
 
 function App() {
   const [provider, setProvider] = useState(null);
-  const [signer, setSigner] = useState(null);
   const [account, setAccount] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isRedirecting, setIsRedirecting] = useState(false);
@@ -40,7 +39,6 @@ function App() {
     const provider = new ethers.BrowserProvider(window.ethereum);
     setProvider(provider);
     const signer = await provider.getSigner();
-    setSigner(signer);
     const network = await provider.getNetwork();
 
     // Get JS version of jury contract

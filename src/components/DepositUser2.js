@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import DataContext from "../Context/DataContext";
@@ -10,13 +10,6 @@ const DepositUser2 = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [depositSuccessful, setDepositSuccessful] = useState(false);
   const navigate = useNavigate();
-  const [id, setId] = useState(null);
-  const [user1Address, setUser1Address] = useState("");
-  const [user1DepositAmount, setUser1DepositAmount] = useState(null);
-  const [user2Address, setUser2Address] = useState("");
-  const [user2DepositAmount, setUser2DepositAmount] = useState(null);
-  const [status, setStatus] = useState("");
-  const [marriageStartTime, setMarriageStartTime] = useState(null);
 
   // Submit deposit by user2
   const handleSubmit = async (e) => {
@@ -40,46 +33,6 @@ const DepositUser2 = () => {
       alert("Transaction failed!");
     }
   };
-
-  // // Set up event listener and collate data
-  // const handleEvent = (
-  //   id,
-  //   user1Address,
-  //   user1DepositAmount,
-  //   user2Address,
-  //   user2DepositAmount,
-  //   status,
-  //   marriageStartTime,
-  //   divorceReportTime,
-  //   ipfsHash,
-  //   divorceReporterAddress,
-  //   divorceDisputerAddress
-  // ) => {
-  //   console.log("handleEvent is called for DepositUser2");
-  //   setId(id);
-  //   console.log("id is set");
-  //   setUser1Address(user1Address);
-  //   console.log("user1Address is set");
-  //   setUser1DepositAmount(user1DepositAmount);
-  //   console.log("user1DepositAmount is set");
-  //   setUser2Address(user2Address);
-  //   console.log("user2Address is set");
-  //   setUser2DepositAmount(user2DepositAmount);
-  //   console.log("user2DepositAmount is set");
-  //   setStatus(status);
-  //   console.log("status is set");
-  //   data.setRefreshScreen(true);
-  //   console.log("refreshScreen is set");
-  // };
-
-  // useEffect(() => {
-  //   if (data.marriage) {
-  //     data.marriage.on("UpdateCoupleDetails", handleEvent);
-  //     return () => {
-  //       data.marriage.off("UpdateCoupleDetails", handleEvent);
-  //     };
-  //   }
-  // }, [data.marriage]);
 
   return (
     <div className="flex h-screen justify-center items-top mt-[4rem] ml-[4rem] ">

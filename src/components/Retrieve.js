@@ -1,12 +1,11 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState } from "react";
 import DataContext from "../Context/DataContext";
 import { useNavigate } from "react-router-dom";
 
 const Retrieve = () => {
   const data = useContext(DataContext);
-  const [userAddressRefunded, setUserAddressRefunded] = useState("");
-  const [status, setStatus] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [refundSuccessful, setRefundSuccessful] = useState(false);
   const navigate = useNavigate();
 
   // Retrieve deposit by user 1
@@ -19,6 +18,9 @@ const Retrieve = () => {
       let transaction = await data?.marriage.connect(signer).retrieveDeposit();
       const receipt = await transaction.wait();
       console.log("Transaction Receipt: ", receipt);
+      setRefundSuccessful(true);
+      data.setIsLoading(false);
+      data.setRefreshScreen(true);
       data.setIsRedirecting(true);
       setTimeout(() => {
         navigate("/dashboard");
@@ -29,36 +31,6 @@ const Retrieve = () => {
       alert("Transaction failed!");
     }
   };
-
-  // Set up event listener and collate data
-  const handleEvent = (
-    id,
-    user1Address,
-    user1DepositAmount,
-    user2Address,
-    user2DepositAmount,
-    status,
-    marriageStartTime,
-    divorceReportTime,
-    ipfsHash,
-    divorceReporterAddress,
-    divorceDisputerAddress
-  ) => {
-    console.log("handleEvent is called for Retrieve");
-    setUserAddressRefunded(user1Address);
-    setStatus(status);
-    data.setIsLoading(false);
-    data.setRefreshScreen(true);
-  };
-
-  useEffect(() => {
-    if (data.marriage) {
-      data.marriage.on("UpdateCoupleDetails", handleEvent);
-      return () => {
-        data.marriage.off("UpdateCoupleDetails", handleEvent);
-      };
-    }
-  }, [data.marriage]);
 
   return (
     <div>
@@ -77,11 +49,10 @@ const Retrieve = () => {
           Retrieve Deposit
         </button>
 
-        {userAddressRefunded && (
+        {refundSuccessful && (
           <>
             <h1 className="mt-[2rem] font-extrabold">
-              <p>Retrieval of Deposit from User 1 {userAddressRefunded} is successful. </p>
-              <p>Status of contract has been changed to {status}.</p>
+              <p>Congrats! Refund of Deposit is successful. </p>
             </h1>
           </>
         )}

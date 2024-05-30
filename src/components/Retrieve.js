@@ -1,11 +1,13 @@
 import React, { useContext, useState, useEffect } from "react";
 import DataContext from "../Context/DataContext";
+import { useNavigate } from "react-router-dom";
 
 const Retrieve = () => {
   const data = useContext(DataContext);
   const [userAddressRefunded, setUserAddressRefunded] = useState("");
   const [status, setStatus] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const navigate = useNavigate();
 
   // Retrieve deposit by user 1
   const handleSubmit = async (e) => {
@@ -17,6 +19,11 @@ const Retrieve = () => {
       let transaction = await data?.marriage.connect(signer).retrieveDeposit();
       const receipt = await transaction.wait();
       console.log("Transaction Receipt: ", receipt);
+      data.setIsRedirecting(true);
+      setTimeout(() => {
+        navigate("/dashboard");
+        data.setIsRedirecting(false);
+      }, 8000);
     } catch (error) {
       console.error(error);
       alert("Transaction failed!");

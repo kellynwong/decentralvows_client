@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import DataContext from "../Context/DataContext";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 const ethers = require("ethers");
 
@@ -12,6 +13,7 @@ const ReportDivorce = () => {
   const [divorceReporterAddress, setDivorceReporterAddress] = useState(null);
   const [status, setStatus] = useState(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const navigate = useNavigate();
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -46,11 +48,16 @@ const ReportDivorce = () => {
       // Call function at smart contract
       const signer = await data.provider.getSigner();
       // let transaction = await data?.marriage.connect(signer).addUser1("0x140e3c94ad3e8b4dd9419c05d8368a8e5ef27786", { value: ethers.parseEther("5") });
-      data.marriage.on("UpdateCoupleDetails", handleEvent);
+      // data.marriage.on("UpdateCoupleDetails", handleEvent);
 
       let transaction = await data?.marriage.connect(signer).submitDivorce(ipfsHash);
       const receipt = await transaction.wait();
       console.log("SUBMISSION OF DIVORCE TO BLOCKCHAIN SUCCESSFUL");
+      data.setRefreshScreen(true);
+
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 8000);
     } catch (error) {
       setError("Error uploading document or submitting divorce.");
       data.setIsLoading(false);
@@ -91,7 +98,7 @@ const ReportDivorce = () => {
     console.log("status is set");
     data.setIsLoading(false);
     console.log("isLoading is set");
-    data.setRefreshScreen(true);
+
     console.log("refreshScreen is set");
   };
 

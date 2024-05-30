@@ -7,43 +7,6 @@ const Jury = () => {
   const [disputes, setDisputes] = useState([]);
   const [voted, setVoted] = useState(false);
 
-  // Retrieve and display disputes
-  let allDisputes = [];
-  const fetchAllDisputes = async () => {
-    let count = await data.jury.disputeDivorceCount();
-    count = parseInt(count.toString());
-    for (let x = 1; x <= count; x++) {
-      let dispute = await data.jury.disputeCountToDetails(x); // use (x) and not [x]
-      allDisputes.push(dispute);
-      console.log(dispute[5]);
-    }
-    setDisputes(allDisputes);
-  };
-  useEffect(() => {
-    fetchAllDisputes();
-  }, [data.account]);
-
-  // Setup event listener to listen for quorum being reached
-  // const handleEvent = async (coupleId) => {
-  //   console.log("QUORUM REACHED");
-  //   let result = await data?.jury.getResults(coupleId);
-  //   console.log("RESULTS RECEIVED");
-  //   data.setDisputeResults((prevResults) => ({ ...prevResults, [coupleId]: result }));
-  //   console.log("RESULTS RECORDED");
-  // };
-
-  // useEffect(() => {
-  //   if (data.jury) {
-  //     console.log("Setting up event listener for quorumReached...");
-  //     data.jury.on("quorumReached", handleEvent);
-  //     return () => {
-  //       console.log("Removing event listener for quorumReached...");
-  //       data.jury.off("quorumReached", handleEvent);
-  //     };
-  //   }
-  // }, [data.jury]);
-
-  // Vote
   const handleVote = async (coupleId, e, vote) => {
     setIsSubmitted(true);
     data.setIsLoading(true);
@@ -60,6 +23,23 @@ const Jury = () => {
     }
   };
 
+  // Retrieve and display DisputeDivorceDetails
+  let disputesArray = [];
+  const fetchDisputes = async () => {
+    let count = await data?.jury?.disputeDivorceCount();
+    count = parseInt(count?.toString());
+    for (let x = 1; x <= count; x++) {
+      // use (x) and not [x]
+      let dispute = await data.jury.disputeCountToDetails(x);
+      console.log(dispute);
+      disputesArray.push(dispute);
+    }
+    setDisputes(disputesArray);
+  };
+  useEffect(() => {
+    fetchDisputes();
+  }, [data.account]);
+
   return (
     <div>
       {" "}
@@ -70,7 +50,7 @@ const Jury = () => {
       )}
       <p className="ml-10 mb-4 p-6"></p>
       <div className="ml-20 mt-[-1rem] grid grid-cols-3 gap-y-12">
-        {disputes.map((dispute, index) => (
+        {disputesArray.map((dispute, index) => (
           <div key={index}>
             {" "}
             {dispute[5].toString() === false ? (

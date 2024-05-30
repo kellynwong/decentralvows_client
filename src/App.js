@@ -13,12 +13,15 @@ import AcceptDisputeDivorce from "./components/AcceptDisputeDivorce";
 import Jury from "./components/Jury";
 import Retrieve from "./components/Retrieve";
 import Spinner from "./components/Spinner";
+import RedirectingSpinner from "./components/RedirectingSpinner.js";
+import { useNavigate } from "react-router-dom";
 
 function App() {
   const [provider, setProvider] = useState(null);
   const [signer, setSigner] = useState(null);
   const [account, setAccount] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
   const [refreshScreen, setRefreshScreen] = useState(false);
   // Contracts
   const [jury, setJury] = useState(null);
@@ -27,6 +30,9 @@ function App() {
   const [disputeDetails, setDisputeDetails] = useState({});
   const [juryResults, setJuryResults] = useState(null);
   const [juryResultsError, setJuryResultsError] = useState(null);
+  const navigate = useNavigate();
+
+  const [inputtedUser2Address, setInputtedUser2Address] = useState("");
 
   const loadBlockchainData = async () => {
     console.log("Refresh Screen: ", refreshScreen);
@@ -59,14 +65,16 @@ function App() {
     let disputeDetails = await jury?.coupleIdToDetails(id);
     setDisputeDetails(disputeDetails);
 
-    // Fetch results of jury, if quorum reached
-    try {
-      let juryResults = await jury.getResults(id);
-      setJuryResults(juryResults);
-      setJuryResultsError(null);
-    } catch (error) {
-      console.error("Error fetching jury results:", error);
-      setJuryResultsError("Voting is still ongoing or another error occurred.");
+    if (disputeDetails[5].toString == "false") {
+      // Fetch results of jury, if quorum reached
+      try {
+        let juryResults = await jury.getResults(id);
+        setJuryResults(juryResults);
+        setJuryResultsError(null);
+      } catch (error) {
+        console.error("Error fetching jury results:", error);
+        setJuryResultsError("Voting is still ongoing or another error occurred.");
+      }
     }
   };
 
@@ -87,6 +95,7 @@ function App() {
   window.ethereum.on("accountsChanged", async () => {
     // Refetch accounts
     const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+    navigate("/");
     setAccount(accounts[0]);
   });
 
@@ -95,6 +104,7 @@ function App() {
     const accounts = await window.ethereum.request({
       method: "eth_requestAccounts",
     });
+
     setAccount(accounts[0]);
   };
 
@@ -118,6 +128,10 @@ function App() {
           setJuryResults,
           juryResultsError,
           setJuryResultsError,
+          inputtedUser2Address,
+          setInputtedUser2Address,
+          isRedirecting,
+          setIsRedirecting,
         }}
       >
         <div>
@@ -127,7 +141,7 @@ function App() {
             <Route path="/homepage" element={<Homepage />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/depositUser1" element={<DepositUser1 />} />
-            <Route path="/depositUser2/:urlId/:urlUser2Address" element={<DepositUser2 />} />{" "}
+            <Route path="/depositUser2/:urlId/:urlUser2Address" element={<DepositUser2 />} />
             <Route path="/retrieve" element={<Retrieve />} />
             <Route path="/reportDivorce" element={<ReportDivorce />} />
             <Route path="/acceptDisputeDivorce" element={<AcceptDisputeDivorce />} />{" "}
@@ -136,6 +150,7 @@ function App() {
         </div>
       </DataContext.Provider>{" "}
       {isLoading && <Spinner />}
+      {isRedirecting && <RedirectingSpinner />}
     </div>
   );
 }

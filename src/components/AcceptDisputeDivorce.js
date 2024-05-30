@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import DataContext from "../Context/DataContext";
+import { useNavigate } from "react-router-dom";
 const ethers = require("ethers");
 
 const AcceptDisputeDivorce = () => {
@@ -7,6 +8,7 @@ const AcceptDisputeDivorce = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [accepted, setAccepted] = useState(false);
   const [disputed, setDisputed] = useState(false);
+  const navigate = useNavigate();
 
   const handleDivorceResponse = async (responseType, e) => {
     setIsSubmitted(true);
@@ -22,8 +24,13 @@ const AcceptDisputeDivorce = () => {
         transaction = await data?.marriage.connect(signer).disputeDivorce();
         setDisputed(true);
       }
-      const receipt = await transaction.wait();
+      await transaction.wait();
       data.setIsLoading(false);
+      data.setRefreshScreen(true);
+
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 8000);
     } catch (error) {
       console.error(error);
       alert("Transaction failed!");

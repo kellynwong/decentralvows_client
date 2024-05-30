@@ -4,14 +4,13 @@ const ethers = require("ethers");
 
 const DepositUser1 = () => {
   const data = useContext(DataContext);
-  const [inputtedUser2Address, setInputtedUser2Address] = useState("");
+
   const [urlForUser2, setUrlForUser2] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [user1Address, setUser1Address] = useState("");
-  const [user1DepositAmount, setUser1DepositAmount] = useState(null);
+  const [depositSuccessful, setDepositSuccessful] = useState(false);
 
   const handleChange = async (e) => {
-    setInputtedUser2Address(e.target.value);
+    data.setInputtedUser2Address(e.target.value);
   };
 
   // Submit deposit by user1
@@ -23,9 +22,12 @@ const DepositUser1 = () => {
       const signer = await data.provider.getSigner();
       let transaction = await data?.marriage
         .connect(signer)
-        .addUser1(inputtedUser2Address, { value: ethers.parseEther("5") });
+        .addUser1(data.inputtedUser2Address, { value: ethers.parseEther("5") });
       const receipt = await transaction.wait();
       console.log("Transaction Receipt: ", receipt);
+      setDepositSuccessful(true);
+      data.setIsLoading(false);
+      // data.setRefreshScreen(true);
     } catch (error) {
       console.error(error);
       alert("Transaction failed!");
@@ -46,10 +48,9 @@ const DepositUser1 = () => {
     divorceDisputerAddress
   ) => {
     console.log("handleEvent is called for DepositUser1");
-    setUser1Address(user1Address);
-    setUser1DepositAmount(user1DepositAmount);
     const urlForUser2 = `${window.location.origin}/depositUser2/${id}/${user2Address}`;
     setUrlForUser2(urlForUser2);
+    console.log("URL for User 2 is set...");
     data.setIsLoading(false);
     data.setRefreshScreen(true);
   };
@@ -78,7 +79,7 @@ const DepositUser1 = () => {
           placeholder="Enter User2's address"
           onChange={handleChange}
           name="User2"
-          value={inputtedUser2Address}
+          value={data.inputtedUser2Address}
           type="text"
         ></input>
         <h1 className={`mt-[2rem] ${isSubmitted ? "text-gray-500" : "text-red-400 font-extrabold"}`}>
@@ -95,12 +96,9 @@ const DepositUser1 = () => {
           Deposit 5 ETH now
         </button>
 
-        {urlForUser2 && (
+        {depositSuccessful && (
           <>
-            <h1 className="mt-[2rem] font-extrabold">
-              Congrats! Deposit from User 1 {user1Address} amounting to{" "}
-              {ethers.formatUnits(user1DepositAmount, 18).toString()} eth is successful.
-            </h1>
+            <h1 className="mt-[2rem] font-extrabold">Congrats! Deposit of 5 ETH is successful.</h1>
             <h1 className="mt-[2rem] text-red-400 font-extrabold">
               Step 3 of 4: Now share the following url with User 2 for them to make their deposit:
             </h1>

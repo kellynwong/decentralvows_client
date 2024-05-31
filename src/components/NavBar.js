@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import DataContext from "../Context/DataContext";
+import Logo from "../assets/decentralvows.png";
 
 const NavBar = () => {
   const data = useContext(DataContext);
@@ -21,9 +22,12 @@ const NavBar = () => {
   }, [data.account]);
 
   return (
-    <div className="font-montserrat font-bold sticky top-0 z-30 bg-white mt-8 ml-[8rem] mr-[8rem]">
+    <div className="font-montserrat font-bold sticky top-0 z-30 bg-white ml-[8rem] mr-[8rem] text-base">
+      <header className="flex justify-center items-center mb-4">
+        <img src={Logo} alt="Logo" className="h-[16rem] mt-[-4rem]" />
+      </header>
       <nav className="h-full">
-        <ul className="md:flex h-full list-none p-0 m-0 items-center justify-between mr-8">
+        <ul className="md:flex h-full list-none p-0 m-10 items-center justify-between mr-8 mt-[-5rem]">
           <li>
             <NavLink
               to="/homepage"
@@ -42,8 +46,6 @@ const NavBar = () => {
               </NavLink>
             </li>
           )}
-          {/* Solidity does not have a null concept, uninitialized fields will have default values: 0 for integers, false
-          for booleans, and empty strings for strings. */}
           {data.coupleDetails[5] === "pendingDepositFromUser2" ||
             (data.coupleDetails[5] === "" && (
               <li>

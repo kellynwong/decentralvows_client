@@ -1,10 +1,10 @@
 import React, { useContext, useState, useEffect } from "react";
 import DataContext from "../Context/DataContext";
+import Textile from "../assets/textile.png";
 const ethers = require("ethers");
 
 const DepositUser1 = () => {
   const data = useContext(DataContext);
-
   const [urlForUser2, setUrlForUser2] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [depositSuccessful, setDepositSuccessful] = useState(false);
@@ -28,6 +28,8 @@ const DepositUser1 = () => {
       setDepositSuccessful(true);
       data.setIsLoading(false);
     } catch (error) {
+      data.setIsLoading(false);
+      data.setRefreshScreen(true);
       console.error(error);
       alert("Transaction failed!");
     }
@@ -66,29 +68,32 @@ const DepositUser1 = () => {
   }, [data.marriage]);
 
   return (
-    <div>
-      <div className="flex-col ml-[8rem] mt-[4rem]">
-        <h1 className={`${isSubmitted ? "text-gray-500" : "text-red-400 font-extrabold"}`}>
+    <div className="relative flex justify-center mt-[6rem] text-base">
+      <img
+        src={Textile}
+        className="rounded absolute inset-0 flex flex-col items-center justify-center m-auto mt-2"
+        alt="Textile"
+      />
+      <div className="relative flex-col text-left text-gray-700">
+        <h1 className={`${isSubmitted ? "text-gray-300" : "text-gray-700 font-extrabold"}`}>
           Step 1 of 4: User 1 to register User 2's wallet address here:
         </h1>
         <input
-          className={`mt-4 py-1 px-3 block rounded w-96 border p-1 m-2 ${
-            isSubmitted ? "text-gray-500 bg-gray-100 cursor-not-allowed" : "text-black"
+          className={`border-2 mt-[1rem] w-[28rem] border-zinc-300 py-2 px-4 rounded-full font-extrabold ${
+            isSubmitted ? "text-gray-300 bg-gray-100 cursor-not-allowed" : "text-gray-700"
           }`}
-          placeholder="Enter User2's address"
+          placeholder="Enter User 2's address"
           onChange={handleChange}
           name="User2"
           value={data.inputtedUser2Address}
           type="text"
         ></input>
-        <h1 className={`mt-[2rem] ${isSubmitted ? "text-gray-500" : "text-red-400 font-extrabold"}`}>
+        <h1 className={`mt-[2rem] ${isSubmitted ? "text-gray-300" : "text-gray-700 font-extrabold"}`}>
           Step 2 of 4: User 1 to click below to deposit 5 eth:
         </h1>
         <button
-          className={`mt-4 rounded p-1 m-2 py-1 px-3 transition-colors border ${
-            isSubmitted
-              ? "text-gray-500 bg-gray-100 cursor-not-allowed"
-              : "text-red-400 hover:bg-red-100 hover:text-black"
+          className={`border-2 mt-[1rem] border-zinc-300 py-2 px-4 rounded-full font-extrabold ${
+            isSubmitted ? "text-gray-300 bg-gray-100 cursor-not-allowed" : "text-gray-700 hover:bg-gray-300"
           }`}
           onClick={handleSubmit}
         >
@@ -98,12 +103,12 @@ const DepositUser1 = () => {
         {depositSuccessful && (
           <>
             <h1 className="mt-[2rem] font-extrabold">Congrats! Deposit of 5 ETH is successful.</h1>
-            <h1 className="mt-[2rem] text-red-400 font-extrabold">
+            <h1 className="mt-[2rem] text-gray-700 font-extrabold">
               Step 3 of 4: Now share the following url with User 2 for them to make their deposit:
             </h1>
             <p className="mt-[1rem] py-1 px-3 p-1">
               {" "}
-              <a href={urlForUser2} className="text-red-400 underline">
+              <a href={urlForUser2} className="text-gray-700 underline">
                 {urlForUser2}
               </a>
             </p>

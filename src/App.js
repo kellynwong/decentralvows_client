@@ -22,23 +22,19 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [isRedirecting, setIsRedirecting] = useState(false);
   const [refreshScreen, setRefreshScreen] = useState(false);
-  // Contracts
   const [jury, setJury] = useState(null);
   const [marriage, setMarriage] = useState(null);
   const [coupleDetails, setCoupleDetails] = useState({});
   const [disputeDetails, setDisputeDetails] = useState({});
   const [juryResults, setJuryResults] = useState(null);
   const [juryResultsError, setJuryResultsError] = useState(null);
+  const [inputtedUser2Address, setInputtedUser2Address] = useState("");
   const navigate = useNavigate();
 
-  const [inputtedUser2Address, setInputtedUser2Address] = useState("");
-
   const loadBlockchainData = async () => {
-    console.log("Refresh Screen: ", refreshScreen);
     // Connect to blockchain
     const provider = new ethers.BrowserProvider(window.ethereum);
     setProvider(provider);
-    const signer = await provider.getSigner();
     const network = await provider.getNetwork();
 
     // Get JS version of jury contract
@@ -57,23 +53,25 @@ function App() {
     let id = await marriage?.getId(account);
     let coupleDetails = await marriage?.getCoupleDetails(id);
     setCoupleDetails(coupleDetails);
-    setRefreshScreen(false);
 
     // Fetch details of disputed divorces
     let disputeDetails = await jury?.coupleIdToDetails(id);
     setDisputeDetails(disputeDetails);
 
-    if (disputeDetails[5].toString == "false") {
-      // Fetch results of jury, if quorum reached
+    // Fetch results of jury, if quorum reached
+    // Compare as is to false. not string
+    if (disputeDetails[5] == false) {
       try {
         let juryResults = await jury.getResults(id);
         setJuryResults(juryResults);
         setJuryResultsError(null);
+        // console.log(juryResults); // prints 1n
       } catch (error) {
         console.error("Error fetching jury results:", error);
         setJuryResultsError("Voting is still ongoing or another error occurred.");
       }
     }
+    setRefreshScreen(false);
   };
 
   // Call loadBlockchainData function on mount
@@ -83,7 +81,6 @@ function App() {
         await loadBlockchainData();
       } catch (error) {
         console.error("An error has occurred: ", error);
-      } finally {
       }
     };
     fetchData();
@@ -95,6 +92,7 @@ function App() {
     const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
     navigate("/");
     setAccount(accounts[0]);
+    setRefreshScreen(true);
   });
 
   // For unconnected metamask users
@@ -117,6 +115,7 @@ function App() {
           marriage,
           provider,
           coupleDetails,
+          refreshScreen,
           setRefreshScreen,
           isLoading,
           setIsLoading,

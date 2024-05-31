@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import DataContext from "../Context/DataContext";
 import { useNavigate } from "react-router-dom";
+import Textile from "../assets/textile.png";
 
 const Retrieve = () => {
   const data = useContext(DataContext);
@@ -27,22 +28,27 @@ const Retrieve = () => {
         data.setIsRedirecting(false);
       }, 8000);
     } catch (error) {
+      data.setIsLoading(false);
+      data.setRefreshScreen(true);
       console.error(error);
       alert("Transaction failed!");
     }
   };
 
   return (
-    <div>
-      <div className="flex-col ml-[8rem] mt-[4rem] ">
-        <h1 className={`${isSubmitted ? "text-gray-500" : "text-red-400 font-extrabold"}`}>
+    <div className="relative flex justify-center text-base mt-[6rem] ">
+      <img
+        src={Textile}
+        className="rounded absolute inset-0 flex flex-col items-center justify-center m-auto mt-2"
+        alt="Textile"
+      />
+      <div className="relative flex-col text-center text-gray-700 p-8">
+        <h1 className={`${isSubmitted ? "text-gray-300" : "text-gray-700 font-extrabold"}`}>
           As User 2 has not deposited their share, you are allowed to retrieve your deposit any time by clicking below:
         </h1>
         <button
-          className={`mt-4 rounded p-1 m-2 py-1 px-3 transition-colors border ${
-            isSubmitted
-              ? "text-gray-500 bg-gray-100 cursor-not-allowed"
-              : "text-red-400 hover:bg-red-100 hover:text-black"
+          className={`border-2 mt-[1rem] border-zinc-300 py-2 px-4 rounded-full font-extrabold ${
+            isSubmitted ? "text-gray-300 bg-gray-100 cursor-not-allowed" : "text-gray-700 hover:bg-gray-300"
           }`}
           onClick={handleSubmit}
         >
@@ -56,7 +62,7 @@ const Retrieve = () => {
             </h1>
           </>
         )}
-      </div>{" "}
+      </div>
     </div>
   );
 };

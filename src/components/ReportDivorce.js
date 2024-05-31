@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import DataContext from "../Context/DataContext";
 import { useNavigate } from "react-router-dom";
+import Textile from "../assets/textile.png";
 import axios from "axios";
 
 const ReportDivorce = () => {
@@ -11,6 +12,7 @@ const ReportDivorce = () => {
   const [error, setError] = useState(null);
   const [divorceReporterAddress, setDivorceReporterAddress] = useState(null);
   const [status, setStatus] = useState(null);
+  const [isUploaded, setIsUploaded] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const navigate = useNavigate();
 
@@ -18,8 +20,8 @@ const ReportDivorce = () => {
     setFile(e.target.files[0]);
   };
 
-  const handleSubmit = async (e) => {
-    setIsSubmitted(true);
+  const handleUpload = async (e) => {
+    setIsUploaded(true);
     data.setIsLoading(true);
     e.preventDefault();
     if (!file) {
@@ -43,17 +45,32 @@ const ReportDivorce = () => {
       console.log(`IMAGE PINNED TO IPFS SUCCESSFULLY AT ${ipfsHash}`);
       setIpfsHash(ipfsHash);
       setImageUrl(process.env.REACT_APP_PINATA_GATEWAY_URL + ipfsHash);
+      data.setIsLoading(false);
+    } catch (error) {
+      setError("Error uploading document.");
+      data.setIsLoading(false);
+      console.error(error);
+    }
+  };
 
+  const handleSubmit = async (e) => {
+    setIsSubmitted(true);
+    data.setIsLoading(true);
+    e.preventDefault();
+    try {
       // Call function at smart contract
       const signer = await data.provider.getSigner();
       let transaction = await data?.marriage.connect(signer).submitDivorce(ipfsHash);
       await transaction.wait();
       console.log("SUBMISSION OF DIVORCE TO BLOCKCHAIN SUCCESSFUL");
       data.setRefreshScreen(true);
-      setTimeout(() => {
-        navigate("/dashboard");
-      }, 8000);
+      data.setIsLoading(false);
+      // setTimeout(() => {
+      //   navigate("/dashboard");
+      // }, 8000);
     } catch (error) {
+      data.setIsLoading(false);
+      data.setRefreshScreen(true);
       setError("Error uploading document or submitting divorce.");
       data.setIsLoading(false);
       console.error(error);
@@ -102,57 +119,74 @@ const ReportDivorce = () => {
     if (data.marriage) {
       console.log("Setting up event listener for divorce...");
       data.marriage.on("UpdateCoupleDetails", handleEvent);
-
-      return () => {
-        // console.log("Removing event listener for divorce...");
-        // data.marriage.off("UpdateCoupleDetails", handleEvent);
-      };
+      return () => {};
     }
   }, [data.marriage]);
 
   return (
-    <div className="flex-col ml-[8rem] mt-[4rem] ">
-      <h1 className={`${isSubmitted ? "text-gray-500" : "text-red-400 font-extrabold"}`}>
-        Step 1 of 2: To submit a divorce, please upload a notarized divorce paper:
-      </h1>
-      <input type="file" onChange={handleFileChange} />
-
-      <button
-        className={`mt-4 rounded-xl py-1 px-3 transition-colors border ${
-          isSubmitted
-            ? "text-gray-500 bg-gray-100 cursor-not-allowed"
-            : "text-red-400 hover:bg-red-100 hover:text-black"
-        }`}
-        onClick={handleSubmit}
-      >
-        Upload
-      </button>
-
-      {ipfsHash && !error && (
-        <>
-          <p>Document uploaded successfully.</p>{" "}
-        </>
-      )}
-      {error && (
-        <p style={{ color: "red" }} className="mt-6">
-          {error}
-        </p>
-      )}
-      {ipfsHash && !error && (
-        <>
-          <img src={imageUrl} alt="Divorce Document" className="mt-[1rem] mb-[3rem] w-72 h-72" />
-          <h1 className="text-red-400 font-extrabold">Step 2 of 2: Please submit divorce onto the blockchain.</h1>
-        </>
-      )}
-      {divorceReporterAddress && (
-        <h1>
-          Divorce submitted successfully!{" "}
-          <ol>
-            <li>Reporter of Divorce registered as: {divorceReporterAddress}</li>
-            <li>Status changed to: {status}</li>
-          </ol>
+    <div className="relative flex justify-center items-center text-base mt-[4rem]">
+      <img
+        src={Textile}
+        className="rounded absolute inset-0 flex flex-col items-center justify-center m-auto mt-2"
+        alt="Textile"
+      />
+      <div className="relative flex-col text-left text-gray-700 p-8">
+        <h1 className={`${isUploaded ? "text-gray-300" : "text-gray-700 font-extrabold"}`}>
+          Step 1 of 2: To report a divorce, please upload a notarized divorce paper:
         </h1>
-      )}
+        <input type="file" onChange={handleFileChange} className="mt-4" />
+
+        <button
+          className={`border-2 mt-[1rem] border-zinc-300 py-2 px-4 rounded-full font-extrabold ${
+            isUploaded ? "text-gray-300 bg-gray-100 cursor-not-allowed" : "text-gray-700 hover:bg-gray-300"
+          }`}
+          onClick={handleUpload}
+        >
+          Upload
+        </button>
+
+        {ipfsHash && !error && (
+          <>
+            <h1 className={`${isUploaded ? "text-gray-300" : "text-gray-700 font-extrabold"}`}>
+              Document has been uploaded to IPFS successfully. Here is a preview:
+            </h1>
+          </>
+        )}
+        {error && (
+          <p style={{ color: "red" }} className="mt-6">
+            {error}
+          </p>
+        )}
+        {ipfsHash && !error && (
+          <>
+            <img
+              src={imageUrl}
+              alt="Divorce Document"
+              className={`mt-[1rem] mb-[3rem] w-72 h-72 ${isUploaded ? "opacity-25" : "opacity-70"}`}
+            />
+            <h1 className={`${isSubmitted ? "text-gray-300" : "text-gray-700 font-extrabold"}`}>
+              Step 2 of 2: Report divorce onto the blockchain:
+            </h1>
+            <button
+              className={`border-2 mt-[1rem] border-zinc-300 py-2 px-4 rounded-full font-extrabold ${
+                isSubmitted ? "text-gray-300 bg-gray-100 cursor-not-allowed" : "text-gray-700 hover:bg-gray-300"
+              }`}
+              onClick={handleSubmit}
+            >
+              Report
+            </button>
+          </>
+        )}
+        {divorceReporterAddress && (
+          <h1 className="mt-[2rem] font-extrabold">
+            Divorce submitted successfully!{" "}
+            <ol>
+              <li>Reporter of Divorce registered as: {divorceReporterAddress}</li>
+              <li>Status changed to: {status}</li>
+            </ol>
+          </h1>
+        )}
+      </div>
     </div>
   );
 };

@@ -5,6 +5,7 @@ module.exports = {
     extend: {
       fontFamily: {
         "space-mono": ['"Space Mono"', "monospace"],
+        chakra: ['"Chakra Petch"', "sans-serif"],
       },
     },
   },

@@ -56,11 +56,11 @@ Please refer to the README in that repository for instructions on deploying and 
 
 ## 🤝 Contributing
 
-We welcome contributions to DecentralVows! Please see our [Contributing Guidelines](CONTRIBUTING.md) for more information on how to get involved.
+We welcome contributions to DecentralVows! 
 
 ## 📄 License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. 
 
 ## ⚠️ Disclaimer
 
